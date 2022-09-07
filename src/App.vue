@@ -4,14 +4,17 @@ import LiftShaft from "@/components/LiftShaft";
 import {ref} from "vue";
 
 const floors = ref(5)
+const liftOnFloor = ref(3)
+
+
 
 </script>
 
 <template>
   <h1 class="mainHeader">Эмулятор лифта</h1>
   <div class="app">
-    <LiftShaft :floors="floors"/>
-    <FloorsPanel :floors="floors"/>
+    <LiftShaft :floors="floors" :lift-on-floor="liftOnFloor"/>
+    <FloorsPanel :floors="floors" :lift-on-floor="liftOnFloor"/>
   </div>
 
 </template>

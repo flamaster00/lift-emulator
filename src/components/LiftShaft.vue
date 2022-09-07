@@ -1,13 +1,12 @@
 <script setup>
 
 import LiftCabin from "@/components/LiftCabin";
-import {ref} from "vue";
+import { ref} from "vue";
 
 const props = defineProps({
-  floors: Number
+  floors: Number,
+  liftOnFloor: Number
 })
-
-const liftOnFloor = ref(1)
 
 </script>
 
@@ -17,10 +16,10 @@ const liftOnFloor = ref(1)
         v-for="index in props.floors"
         :key="index"
     >
+      <LiftCabin v-if="liftOnFloor === index" />
       {{index}}
     </div>
   </div>
-  <LiftCabin/>
 </template>
 
 <style>
@@ -38,5 +37,6 @@ const liftOnFloor = ref(1)
   border: 1px solid blue;
   width: 100px;
   height: 100px;
+  position: relative;
 }
 </style>
