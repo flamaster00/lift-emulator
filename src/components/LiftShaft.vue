@@ -1,8 +1,13 @@
 <script setup>
 
+import LiftCabin from "@/components/LiftCabin";
+import {ref} from "vue";
+
 const props = defineProps({
   floors: Number
 })
+
+const liftOnFloor = ref(1)
 
 </script>
 
@@ -15,12 +20,12 @@ const props = defineProps({
       {{index}}
     </div>
   </div>
-
+  <LiftCabin/>
 </template>
 
 <style>
 .floorShaft {
-  width: 10%;
+  margin-right: 10px;
   min-width: 100px;
   height: 80%;
   border: 1px solid grey;
@@ -29,7 +34,9 @@ const props = defineProps({
 
 }
 .floorShaft > div {
+  padding: 0;
   border: 1px solid blue;
+  width: 100px;
   height: 100px;
 }
 </style>

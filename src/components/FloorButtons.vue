@@ -2,6 +2,10 @@
 const props = defineProps({
   floors: Number
 })
+
+function floorPressed(id) {
+  console.log('clicked number ' + id)
+}
 </script>
 
 <template>
@@ -11,7 +15,12 @@ const props = defineProps({
       v-for="index in props.floors"
       :key="index"
   >
-    <button :key="index">{{index}}</button>
+    <button
+        :key="index"
+        @click="floorPressed(index)"
+    >
+      {{index}}
+    </button>
   </div>
 
 
@@ -22,7 +31,6 @@ const props = defineProps({
    padding: 2px;
    width: 40px;
    border-radius: 50%;
-   cursor: pointer;
    display: inline-flex;
 }
  .floorButtonContainer > button {
@@ -30,5 +38,7 @@ const props = defineProps({
    height: 30px;
    border-radius: 50%;
    border: 1px solid grey;
+   cursor: pointer;
+
  }
 </style>

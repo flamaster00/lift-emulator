@@ -19,7 +19,6 @@ const props = defineProps({
 <style>
  .floorsPanel {
    margin: 10px;
-   border: 1px solid grey;
    min-width: 100px;
    text-align: center;
    align-self: start;
