@@ -6,22 +6,29 @@ const props = defineProps({
 
 <template>
 
-<button
-    class="floorButton"
-    v-for="index in props.floors"
-    :key="index"
->
-  {{index}}
-</button>
+  <div
+      class="floorButtonContainer"
+      v-for="index in props.floors"
+      :key="index"
+  >
+    <button :key="index">{{index}}</button>
+  </div>
+
 
 </template>
 
 <style>
- .floorButton {
-   width: 50px;
-   height: 50px;
+ .floorButtonContainer {
+   padding: 2px;
+   width: 40px;
    border-radius: 50%;
    cursor: pointer;
-   margin: 2px;
+   display: inline-flex;
 }
+ .floorButtonContainer > button {
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   border: 1px solid grey;
+ }
 </style>

@@ -1,15 +1,16 @@
 <script setup>
-import {ref} from "vue";
 import FloorButtons from "@/components/FloorButtons";
 
-const floors = ref(5)
+const props = defineProps({
+  floors: Number
+})
 </script>
 
 <template>
   <div class="floorsPanel">
     <h2>Вызов лифта на этаж</h2>
     <div class="floorButtons">
-      <FloorButtons :floors="floors"/>
+      <FloorButtons :floors="props.floors"/>
     </div>
   </div>
 
@@ -17,17 +18,20 @@ const floors = ref(5)
 
 <style>
  .floorsPanel {
+   margin: 10px;
    border: 1px solid grey;
-   display: inline-block;
-   width: 20%;
+   min-width: 100px;
    text-align: center;
+   align-self: start;
 }
  .floorButtons {
+   max-height: 200px;
    border: 1px solid grey;
    margin: 10px;
    padding: 10px;
    display: flex;
-   justify-content: start;
+   flex-direction: column-reverse;
    flex-wrap: wrap;
+   align-self: start;
 }
 </style>
