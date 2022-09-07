@@ -6,17 +6,24 @@ import {ref} from "vue";
 const floors = ref(5)
 const liftOnFloor = ref(3)
 
-
+function clickHandler(floor) {
+  console.log('response from child: ' + floor)
+  liftOnFloor.value = floor
+  console.log('lift is on floor ' + liftOnFloor.value)
+}
 
 </script>
 
 <template>
-  <h1 class="mainHeader">Эмулятор лифта</h1>
+  <h1 class="main-header">Эмулятор лифта</h1>
   <div class="app">
     <LiftShaft :floors="floors" :lift-on-floor="liftOnFloor"/>
-    <FloorsPanel :floors="floors" :lift-on-floor="liftOnFloor"/>
+    <FloorsPanel :floors="floors" @response="clickHandler"/>
   </div>
-
+<button
+@click="clickHandler">
+  press me!
+</button>
 </template>
 
 <style>
@@ -26,7 +33,7 @@ const liftOnFloor = ref(3)
   margin: 0;
   box-sizing: border-box;
 }
-.mainHeader {
+.main-header {
   text-align: center;
 }
 .app {

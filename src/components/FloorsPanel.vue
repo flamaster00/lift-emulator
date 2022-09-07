@@ -1,24 +1,30 @@
 <script setup>
-import {ref} from "vue";
 
 const props = defineProps({
   floors: Number,
 })
 
+const emit = defineEmits(['response'])
+
+function clicked(id) {
+  console.log('clicked index is ' + id)
+  emit('response', id)
+}
+
 </script>
 
 <template>
-  <div class="floorsPanel">
+  <div class="floors-panel">
     <h2>Вызов лифта на этаж</h2>
-    <div class="floorButtons">
+    <div class="floor-buttons">
       <div
-          class="floorButtonContainer"
+          class="floor-button-container"
           v-for="index in props.floors"
           :key="index"
       >
         <button
             :key="index"
-            @click="moveToFloor = index"
+            @click="clicked(index)"
         >
           {{index}}
         </button>
@@ -29,13 +35,13 @@ const props = defineProps({
 </template>
 
 <style>
- .floorsPanel {
+ .floors-panel {
    margin: 10px;
    min-width: 100px;
    text-align: center;
    align-self: start;
 }
- .floorButtons {
+ .floor-buttons {
    max-height: 200px;
    border: 1px solid grey;
    margin: 10px;
@@ -45,13 +51,13 @@ const props = defineProps({
    flex-wrap: wrap;
    align-self: start;
 }
- .floorButtonContainer {
+ .floor-button-container {
    padding: 2px;
    width: 40px;
    border-radius: 50%;
    display: inline-flex;
  }
- .floorButtonContainer > button {
+ .floor-button-container > button {
    width: 30px;
    height: 30px;
    border-radius: 50%;
