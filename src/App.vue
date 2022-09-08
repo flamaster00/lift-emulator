@@ -4,12 +4,13 @@ import LiftShaft from "@/components/LiftShaft";
 import {ref} from "vue";
 
 const floors = ref(5)
-const liftOnFloor = ref(3)
+const currentFloor = ref(1)
+const nextFloor = ref (1)
+// const queue = ref([1])
 
 function clickHandler(floor) {
-  console.log('response from child: ' + floor)
-  liftOnFloor.value = floor
-  console.log('lift is on floor ' + liftOnFloor.value)
+  console.log('from child ' + floor)
+  nextFloor.value = floor
 }
 
 </script>
@@ -17,13 +18,15 @@ function clickHandler(floor) {
 <template>
   <h1 class="main-header">Эмулятор лифта</h1>
   <div class="app">
-    <LiftShaft :floors="floors" :lift-on-floor="liftOnFloor"/>
+    <LiftShaft
+        :floors="floors"
+        :current-floor="currentFloor"
+        :next-floor="nextFloor"
+        @onthefloor="(floor) => currentFloor.value = floor"
+    />
     <FloorsPanel :floors="floors" @response="clickHandler"/>
   </div>
-<button
-@click="clickHandler">
-  press me!
-</button>
+
 </template>
 
 <style>

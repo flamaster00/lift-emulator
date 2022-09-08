@@ -17,5 +17,6 @@
   top: 0;
   left: 0;
   z-index: -1;
+  transition: 1s ease-in-out;
 }
 </style>

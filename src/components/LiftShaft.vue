@@ -1,11 +1,23 @@
 <script setup>
 
 import LiftCabin from "@/components/LiftCabin";
-import { ref} from "vue";
+import {computed} from "vue";
 
 const props = defineProps({
   floors: Number,
-  liftOnFloor: Number
+  currentFloor: Number,
+  nextFloor: Number
+})
+
+const moveToFloor = computed(() => {
+  const position = `${-(props.nextFloor - props.currentFloor) * 100}px`;
+  const transition = `${props.nextFloor - props.currentFloor}s ease-in-out`;
+  console.log(props.currentFloor)
+  console.log(props.nextFloor)
+  console.log(position)
+  console.log(transition)
+  console.log(`top: ${position}, transition: ${transition}`)
+  return `top: ${position}; transition: ${transition}`
 })
 
 </script>
@@ -16,7 +28,10 @@ const props = defineProps({
         v-for="index in props.floors"
         :key="index"
     >
-      <LiftCabin v-if="liftOnFloor === index" />
+      <LiftCabin
+        v-if="index === 1"
+        :style="moveToFloor"
+      />
       {{index}}
     </div>
   </div>

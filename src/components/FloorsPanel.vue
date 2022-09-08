@@ -6,7 +6,7 @@ const props = defineProps({
 
 const emit = defineEmits(['response'])
 
-function clicked(id) {
+function setNextFloor(id) {
   console.log('clicked index is ' + id)
   emit('response', id)
 }
@@ -24,7 +24,7 @@ function clicked(id) {
       >
         <button
             :key="index"
-            @click="clicked(index)"
+            @click="setNextFloor(index)"
         >
           {{index}}
         </button>
@@ -36,6 +36,7 @@ function clicked(id) {
 
 <style>
  .floors-panel {
+   border: 1px solid black;
    margin: 10px;
    min-width: 100px;
    text-align: center;
@@ -50,12 +51,14 @@ function clicked(id) {
    flex-direction: column-reverse;
    flex-wrap: wrap;
    align-self: start;
-}
+
+ }
  .floor-button-container {
    padding: 2px;
    width: 40px;
    border-radius: 50%;
    display: inline-flex;
+
  }
  .floor-button-container > button {
    width: 30px;
