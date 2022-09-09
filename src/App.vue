@@ -95,6 +95,9 @@ const moveToFloor = computed(() => {
     <LiftShaft
         :floors="floors"
         :moving="moveToFloor"
+        :is-moving="isMoving"
+        :is-waiting="isWaiting"
+        :is-ready="isReady"
         @liftstopped="liftWaiting"
     />
     <FloorsPanel :floors="floors" @response="clickHandler"/>

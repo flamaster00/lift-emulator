@@ -2,43 +2,41 @@
 
 import LiftCabin from "@/components/LiftCabin";
 
-import {ref} from "vue";
-
 const props = defineProps({
   floors: Number,
-
-  moving: String
+  moving: String,
+  isMoving: Boolean,
+  isWaiting: Boolean,
+  isReady: Boolean
 })
-
-const isOnFloor = ref(true)
 
 const emit = defineEmits(['liftstopped'])
 
 function transitionStart() {
-  isOnFloor.value = !isOnFloor.value
   console.log('TRANSITION STARTED!!!')
-  console.log(isOnFloor.value)
+  console.log('is moving --- ' + props.isMoving)
 
 }
 
 function transitionEnd() {
   console.log('TRANSITION ENDED!!!')
-  isOnFloor.value = !isOnFloor.value
-  console.log(isOnFloor.value)
   emit('liftstopped', true)
 }
+
+
 
 </script>
 
 <template>
   <div class="floor-shaft">
     <div
-        v-for="index in props.floors"
+        v-for="index in floors"
         :key="index"
     >
       <LiftCabin
         v-if="index === 1"
         :style="moving"
+        :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready': isReady}"
         @transitionstart="transitionStart"
         @transitionend="transitionEnd"
       />
