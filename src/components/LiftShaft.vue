@@ -47,7 +47,7 @@ function transitionEnd() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .floor-shaft {
   margin-right: 10px;
   min-width: 100px;
@@ -65,6 +65,27 @@ function transitionEnd() {
   position: relative;
 }
 .is-moving {
-  background-color: yellow;
+  background-color: aqua;
 }
+.is-waiting {
+  background-color: yellow;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.is-ready {
+  background-color: green;
+}
+
+
 </style>

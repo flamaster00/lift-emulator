@@ -12,15 +12,30 @@ const isWaiting = ref(false)
 const isReady = ref(true)
 
 function clickHandler(floor) {
-  queue.value.push(floor)
-  console.log(queue.value)
-  lift()
+  checkPressedButton(floor)
+  liftStart()
 }
 
-function lift() {
+function checkPressedButton(floor) {
+  //  NO items in queue
+  if (!queue.value.length) {
+    if (floor !== currentFloor.value) {
+      queue.value.push(floor)
+      console.log(queue.value)
+    }
+  } else {
+    // there ARE items in queue
+    if (floor !== queue.value[queue.value.length - 1]) {
+      queue.value.push(floor)
+      console.log(queue.value)
+    }
+  }
+}
+
+function liftStart() {
   if (queue.value.length) {
     if (isReady.value) {
-      const nextFloor = queue.value.shift()
+      const nextFloor = queue.value[0]
       console.log(queue.value)
       liftMoving(nextFloor)
       if (isWaiting.value) {
@@ -32,7 +47,7 @@ function lift() {
 
 watch(
     () => isReady.value,
-    lift
+    liftStart
 )
 
 function liftMoving(floor) {
@@ -54,6 +69,9 @@ function liftWaiting(liftWaiting) {
 }
 
 function liftReady() {
+  console.log('queue BEFORE shift ' + queue.value)
+  queue.value.shift()
+  console.log('queue AFTER shift ' + queue.value)
   currentFloor.value = nextFloor.value
   isWaiting.value = !isWaiting.value
   isReady.value = !isReady.value
