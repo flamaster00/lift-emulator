@@ -16,18 +16,21 @@ function clickHandler(floor) {
   liftStart()
 }
 
+watch(
+    () => isReady.value,
+    liftStart
+)
+
 function checkPressedButton(floor) {
   //  NO items in queue
   if (!queue.value.length) {
     if (floor !== currentFloor.value) {
       queue.value.push(floor)
-      console.log(queue.value)
     }
   } else {
     // there ARE items in queue
-    if (floor !== queue.value[queue.value.length - 1]) {
+    if (queue.value.indexOf(floor) === -1) {
       queue.value.push(floor)
-      console.log(queue.value)
     }
   }
 }
@@ -36,7 +39,6 @@ function liftStart() {
   if (queue.value.length) {
     if (isReady.value) {
       const nextFloor = queue.value[0]
-      console.log(queue.value)
       liftMoving(nextFloor)
       if (isWaiting.value) {
         liftWaiting(isWaiting.value)
@@ -45,47 +47,33 @@ function liftStart() {
   }
 }
 
-watch(
-    () => isReady.value,
-    liftStart
-)
-
 function liftMoving(floor) {
-  console.log('lift is moving to floor ' + floor)
   isReady.value = false
   isMoving.value = true
   nextFloor.value = floor
-  console.log('isReady - ' + isReady.value, 'isMoving - ' + isMoving.value, 'isWaiting - ' + isWaiting.value)
 }
 
 function liftWaiting(liftWaiting) {
-  console.log('I AM WAITING!!!!')
+  currentFloor.value = nextFloor.value
   isMoving.value = !isMoving.value
   isWaiting.value = liftWaiting
-  console.log('isReady - ' + isReady.value, ', isMoving - ' + isMoving.value, ', isWaiting - ' + isWaiting.value)
   setTimeout(() => {
     liftReady()
   }, 3000)
 }
 
 function liftReady() {
-  console.log('queue BEFORE shift ' + queue.value)
   queue.value.shift()
-  console.log('queue AFTER shift ' + queue.value)
-  currentFloor.value = nextFloor.value
   isWaiting.value = !isWaiting.value
   isReady.value = !isReady.value
-  console.log('I AM READY!!!')
-  console.log('isReady - ' + isReady.value, ', isMoving - ' + isMoving.value, ', isWaiting - ' + isWaiting.value)
-  console.log('current floor ' + currentFloor.value + ' and next floor ' + nextFloor.value)
 }
 
 const moveToFloor = computed(() => {
   const position = -((nextFloor.value - 1) * 100)
   const transition = Math.abs(nextFloor.value - currentFloor.value)
-  console.log(`top: ${position}px; transition: ${transition}s ease-in-out`)
   return `top: ${position}px; transition: top ${transition}s ease-in-out`
 })
+
 
 </script>
 
@@ -98,9 +86,15 @@ const moveToFloor = computed(() => {
         :is-moving="isMoving"
         :is-waiting="isWaiting"
         :is-ready="isReady"
+        :next-floor="nextFloor"
+        :direction="nextFloor - currentFloor"
         @liftstopped="liftWaiting"
     />
-    <FloorsPanel :floors="floors" @response="clickHandler"/>
+    <FloorsPanel
+        :floors="floors"
+        :queue="queue"
+        @response="clickHandler"
+    />
   </div>
 
 </template>

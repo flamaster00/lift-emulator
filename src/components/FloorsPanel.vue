@@ -2,12 +2,12 @@
 
 const props = defineProps({
   floors: Number,
+  queue: Array
 })
 
 const emit = defineEmits(['response'])
 
 function setNextFloor(id) {
-  console.log('clicked index is ' + id)
   emit('response', id)
 }
 
@@ -24,6 +24,7 @@ function setNextFloor(id) {
       >
         <button
             :key="index"
+            :class="{active: queue.includes(index)}"
             @click="setNextFloor(index)"
         >
           {{index}}
@@ -66,6 +67,18 @@ function setNextFloor(id) {
    border-radius: 50%;
    border: 1px solid grey;
    cursor: pointer;
-
+   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 2px 3px 0 rgba(0,0,0,0.19);
  }
+ .active {
+   border: 2px solid #770a0a;
+   background-color: #e14848;
+   color: #fff;
+ }
+
+ button:active {
+   background-color: #ce6e6e;
+   transform: scale(80%) translateY(2px);
+   color: white;
+ }
+
 </style>

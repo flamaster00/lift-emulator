@@ -7,23 +7,16 @@ const props = defineProps({
   moving: String,
   isMoving: Boolean,
   isWaiting: Boolean,
-  isReady: Boolean
+  isReady: Boolean,
+  nextFloor: Number,
+  direction: Number
 })
 
 const emit = defineEmits(['liftstopped'])
 
-function transitionStart() {
-  console.log('TRANSITION STARTED!!!')
-  console.log('is moving --- ' + props.isMoving)
-
-}
-
 function transitionEnd() {
-  console.log('TRANSITION ENDED!!!')
   emit('liftstopped', true)
 }
-
-
 
 </script>
 
@@ -37,7 +30,9 @@ function transitionEnd() {
         v-if="index === 1"
         :style="moving"
         :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready': isReady}"
-        @transitionstart="transitionStart"
+        :next-floor="props.nextFloor"
+        :direction="direction"
+        :is-waiting="isWaiting"
         @transitionend="transitionEnd"
       />
       {{index}}
@@ -67,22 +62,9 @@ function transitionEnd() {
 }
 .is-waiting {
   background-color: yellow;
-  animation: blink-animation 1s steps(5, start) infinite;
-  -webkit-animation: blink-animation 1s steps(5, start) infinite;
 }
-@keyframes blink-animation {
-  to {
-    visibility: hidden;
-  }
-}
-@-webkit-keyframes blink-animation {
-  to {
-    visibility: hidden;
-  }
-}
-
 .is-ready {
-  background-color: green;
+  background-color: greenyellow;
 }
 
 
