@@ -1,36 +1,46 @@
 <script setup>
 
 import LiftCabin from "@/components/LiftCabin";
-import {computed} from "vue";
+
+import {ref} from "vue";
 
 const props = defineProps({
   floors: Number,
-  currentFloor: Number,
-  nextFloor: Number
+
+  moving: String
 })
 
-const moveToFloor = computed(() => {
-  const position = `${-(props.nextFloor - props.currentFloor) * 100}px`;
-  const transition = `${props.nextFloor - props.currentFloor}s ease-in-out`;
-  console.log(props.currentFloor)
-  console.log(props.nextFloor)
-  console.log(position)
-  console.log(transition)
-  console.log(`top: ${position}, transition: ${transition}`)
-  return `top: ${position}; transition: ${transition}`
-})
+const isOnFloor = ref(true)
+
+const emit = defineEmits(['liftstopped'])
+
+function transitionStart() {
+  isOnFloor.value = !isOnFloor.value
+  console.log('TRANSITION STARTED!!!')
+  console.log(isOnFloor.value)
+
+}
+
+function transitionEnd() {
+  console.log('TRANSITION ENDED!!!')
+  isOnFloor.value = !isOnFloor.value
+  console.log(isOnFloor.value)
+  emit('liftstopped', true)
+}
 
 </script>
 
 <template>
-  <div class="floorShaft">
+  <div class="floor-shaft">
     <div
         v-for="index in props.floors"
         :key="index"
     >
       <LiftCabin
         v-if="index === 1"
-        :style="moveToFloor"
+        :style="moving"
+        @transitionstart="transitionStart"
+        @transitionend="transitionEnd"
       />
       {{index}}
     </div>
@@ -38,7 +48,7 @@ const moveToFloor = computed(() => {
 </template>
 
 <style>
-.floorShaft {
+.floor-shaft {
   margin-right: 10px;
   min-width: 100px;
   height: 80%;
@@ -47,11 +57,14 @@ const moveToFloor = computed(() => {
   flex-direction: column-reverse;
 
 }
-.floorShaft > div {
+.floor-shaft > div {
   padding: 0;
   border: 1px solid blue;
   width: 100px;
   height: 100px;
   position: relative;
+}
+.is-moving {
+  background-color: yellow;
 }
 </style>
