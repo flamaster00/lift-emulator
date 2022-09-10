@@ -1,26 +1,122 @@
 <script setup>
 
+import {computed, ref, watch} from "vue";
+
 const props = defineProps({
-  nextFloor: Number,
-  direction: Number,
-  isWaiting: Boolean
+  floorNumber: Number,
 })
+
+const emit = defineEmits(['queue'])
+
+const currentFloor = ref(1)
+const nextFloor = ref (1)
+const queue = ref([])
+const isMoving = ref(false)
+const isWaiting = ref(false)
+const isReady = ref(true)
+
+function checkPressedButton(floor) {
+  //  NO items in queue
+  if (!queue.value.length) {
+    if (floor !== currentFloor.value) {
+      queue.value.push(floor)
+      emit('queue', queue.value)
+    }
+  } else {
+    // there ARE items in queue
+    if (queue.value.indexOf(floor) === -1) {
+      queue.value.push(floor)
+      emit('queue', queue.value)
+    }
+  }
+}
+
+function liftStart() {
+  if (queue.value.length) {
+    if (isReady.value) {
+      const nextFloor = queue.value[0]
+      liftMoving(nextFloor)
+      }
+  }
+}
+function liftMoving(floor) {
+  isReady.value = false
+  isMoving.value = true
+  nextFloor.value = floor
+
+}
+function liftWaiting() {
+  isMoving.value = false
+  isWaiting.value = true
+  currentFloor.value = nextFloor.value
+
+  setTimeout(() => {
+    liftReady()
+  }, 3000)
+}
+function liftReady() {
+  queue.value.shift()
+  emit('queue', queue.value)
+  isWaiting.value = false
+  isReady.value = true
+}
+const moveToFloor = computed(() => {
+  const position = -((nextFloor.value - 1) * 100)
+  const transition = Math.abs(nextFloor.value - currentFloor.value)
+  return `top: ${position}px; transition: top ${transition}s ease-in-out`
+})
+
+const direction = computed(() => {
+  return nextFloor.value - currentFloor.value
+})
+
+// call liftWaiting() after moving transition ended.
+// moved this function here because it won't work in liftStart() function after liftMoving()
+// as it can't see isWaiting change
+function transitionEnd() {
+  liftWaiting()
+}
+
+// checkPressedButton function can't see new value of props.floorNumber without watcher
+watch(
+    () => props.floorNumber,
+    () => {
+      checkPressedButton(props.floorNumber)
+      if (isReady.value) {
+        liftStart()
+      }
+    }
+)
+
+// Without isReady lift won't start after finishing move to floor
+watch(
+    () => [queue.value, isReady.value],
+    liftStart
+)
+
+checkPressedButton(props.floorNumber)
+
 </script>
 
 <template>
 
-  <div class="lift">
-    <div class="screen">{{props.nextFloor}}</div>
+  <div
+      class="lift"
+      :style="moveToFloor"
+      :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready':isReady}"
+      @transitionend="transitionEnd"
+  >
+    <div class="screen">{{nextFloor}}</div>
     <div>
       <div
           class="arrow-up"
-          :class="{up: props.direction > 0, 'is-waiting-up': props.isWaiting}"
+          :class="{up: direction > 0, 'is-waiting-up': isWaiting}"
 
       >
       </div>
       <div
           class="arrow-down"
-          :class="{down: props.direction < 0, 'is-waiting-down': props.isWaiting}"
+          :class="{down: direction < 0, 'is-waiting-down': isWaiting}"
       >
       </div>
     </div>
@@ -104,6 +200,15 @@ const props = defineProps({
   to {
     border-top: 13px solid black;
   }
+}
+.is-moving {
+  background-color: aqua;
+}
+.is-waiting {
+  background-color: yellow;
+}
+.is-ready {
+  background-color: greenyellow;
 }
 
 </style>

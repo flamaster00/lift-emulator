@@ -24,7 +24,10 @@ function setNextFloor(id) {
       >
         <button
             :key="index"
-            :class="{active: queue.includes(index), next: index === props.queue[0]}"
+            :class="{
+              active: queue.includes(index),
+              next: index === props.queue[0]
+            }"
             @click="setNextFloor(index)"
         >
           {{index}}
@@ -38,6 +41,7 @@ function setNextFloor(id) {
 <style>
  .floors-panel {
    border: 1px solid black;
+   padding: 5px;
    margin: 10px;
    min-width: 100px;
    text-align: center;

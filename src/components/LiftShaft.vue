@@ -2,20 +2,15 @@
 
 import LiftCabin from "@/components/LiftCabin";
 
-const props = defineProps({
+defineProps({
   floors: Number,
-  moving: String,
-  isMoving: Boolean,
-  isWaiting: Boolean,
-  isReady: Boolean,
-  nextFloor: Number,
-  direction: Number
+  button: Number
 })
 
-const emit = defineEmits(['liftstopped'])
+const emit = defineEmits(['queue'])
 
-function transitionEnd() {
-  emit('liftstopped', true)
+function sendQueueToParent(queue) {
+  emit('queue', queue)
 }
 
 </script>
@@ -28,19 +23,15 @@ function transitionEnd() {
     >
       <LiftCabin
         v-if="index === 1"
-        :style="moving"
-        :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready': isReady}"
-        :next-floor="props.nextFloor"
-        :direction="direction"
-        :is-waiting="isWaiting"
-        @transitionend="transitionEnd"
+        :floor-number="button"
+        @queue="sendQueueToParent"
       />
       {{index}}
     </div>
   </div>
 </template>
 
-<style scoped>
+<style>
 .floor-shaft {
   margin-right: 10px;
   min-width: 100px;
@@ -57,16 +48,5 @@ function transitionEnd() {
   height: 100px;
   position: relative;
 }
-.is-moving {
-  background-color: aqua;
-}
-.is-waiting {
-  background-color: yellow;
-}
-.is-ready {
-  background-color: greenyellow;
-}
-
-
 
 </style>
