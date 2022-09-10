@@ -24,7 +24,7 @@ function setNextFloor(id) {
       >
         <button
             :key="index"
-            :class="{active: queue.includes(index)}"
+            :class="{active: queue.includes(index), next: index === props.queue[0]}"
             @click="setNextFloor(index)"
         >
           {{index}}
@@ -79,6 +79,9 @@ function setNextFloor(id) {
    background-color: #ce6e6e;
    transform: scale(80%) translateY(2px);
    color: white;
+ }
+ .next {
+   background-color: #209cff;
  }
 
 </style>

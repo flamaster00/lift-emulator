@@ -39,7 +39,7 @@ const props = defineProps({
   z-index: -1;
   transition: 1s ease-in-out;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .screen {
