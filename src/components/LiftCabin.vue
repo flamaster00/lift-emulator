@@ -1,26 +1,105 @@
 <script setup>
 
+import {computed, onMounted, reactive, watch} from "vue";
+
 const props = defineProps({
-  nextFloor: Number,
-  direction: Number,
-  isWaiting: Boolean
+  data: Object,
+  liftId: Number,
 })
+
+const emit = defineEmits(['lift'])
+
+const lift = reactive({
+  id: props.liftId,
+  currentFloor: 1,
+  nextFloor: 1,
+  queue: [],
+  isMoving: false,
+  isWaiting: false,
+  isReady: true
+})
+
+onMounted(() => {
+  emit('lift', lift)
+})
+
+watch(lift,
+    () => {
+      emit('lift', lift)
+})
+
+watch(
+    () => props.data.nextFloor,
+    () => {
+      if (lift.id === props.data.id) lift.queue.push(props.data.nextFloor)
+      if (lift.isReady) {
+        liftStart()
+      }
+    }
+)
+
+// Without isReady lift won't start after finishing move to floor
+watch(
+    () => [lift.queue, lift.isReady],
+    liftStart
+)
+
+function liftStart() {
+  if (lift.queue.length) {
+    if (lift.isReady) {
+      lift.nextFloor = lift.queue[0]
+      }
+  }
+}
+function liftMoving() {
+  lift.isReady = false
+  lift.isMoving = true
+}
+function liftWaiting() {
+  lift.isMoving = false
+  lift.isWaiting = true
+  setTimeout(() => {
+    liftReady()
+  }, 3000)
+}
+function liftReady() {
+  lift.queue.shift()
+  lift.currentFloor = lift.nextFloor
+  lift.isWaiting = false
+  lift.isReady = true
+}
+const moveToFloor = computed(() => {
+  const position = -((lift.nextFloor - 1) * 100)
+  const transition = Math.abs(lift.nextFloor - lift.currentFloor)
+  return `top: ${position}px; transition: top ${transition}s ease-in-out`
+})
+
+const direction = computed(() => {
+  return lift.nextFloor - lift.currentFloor
+})
+
 </script>
 
 <template>
 
-  <div class="lift">
-    <div class="screen">{{props.nextFloor}}</div>
+  <div
+      class="lift"
+      :style="moveToFloor"
+      :class="{'is-moving': lift.isMoving, 'is-waiting': lift.isWaiting, 'is-ready':lift.isReady}"
+      @transitionstart="liftMoving"
+      @transitionend="liftWaiting"
+  >
+    <div class="screen">{{lift.nextFloor}}</div>
     <div>
       <div
           class="arrow-up"
-          :class="{up: props.direction > 0, 'is-waiting-up': props.isWaiting}"
+          :class="{up: direction > 0, 'is-waiting-up': lift.isWaiting}"
 
       >
       </div>
       <div
           class="arrow-down"
-          :class="{down: props.direction < 0, 'is-waiting-down': props.isWaiting}"
+          :class="{down: direction < 0, 'is-waiting-down': lift.isWaiting}"
       >
       </div>
     </div>
@@ -104,6 +183,15 @@ const props = defineProps({
   to {
     border-top: 13px solid black;
   }
+}
+.is-moving {
+  background-color: aqua;
+}
+.is-waiting {
+  background-color: yellow;
+}
+.is-ready {
+  background-color: greenyellow;
 }
 
 </style>

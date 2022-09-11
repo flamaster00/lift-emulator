@@ -19,15 +19,18 @@ function setNextFloor(id) {
     <div class="floor-buttons">
       <div
           class="floor-button-container"
-          v-for="index in props.floors"
-          :key="index"
+          v-for="floor in props.floors"
+          :key="floor"
       >
         <button
-            :key="index"
-            :class="{active: queue.includes(index), next: index === props.queue[0]}"
-            @click="setNextFloor(index)"
+            :key="floor"
+            :class="{
+              active: queue.includes(floor),
+              next: floor === props.queue[0]
+            }"
+            @click="setNextFloor(floor)"
         >
-          {{index}}
+          {{floor}}
         </button>
       </div>
     </div>
@@ -38,6 +41,7 @@ function setNextFloor(id) {
 <style>
  .floors-panel {
    border: 1px solid black;
+   padding: 5px;
    margin: 10px;
    min-width: 100px;
    text-align: center;

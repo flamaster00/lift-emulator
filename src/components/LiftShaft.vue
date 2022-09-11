@@ -1,46 +1,76 @@
 <script setup>
 
 import LiftCabin from "@/components/LiftCabin";
+import {reactive, ref, watch} from "vue";
 
 const props = defineProps({
   floors: Number,
-  moving: String,
-  isMoving: Boolean,
-  isWaiting: Boolean,
-  isReady: Boolean,
-  nextFloor: Number,
-  direction: Number
+  liftCount: Number,
+  floorPressed: Object
 })
 
-const emit = defineEmits(['liftstopped'])
+const lifts = ref([])
+const liftToFloor = reactive({})
 
-function transitionEnd() {
-  emit('liftstopped', true)
+const emit = defineEmits(['lifts'])
+
+watch(
+    () => props.floorPressed.count,
+    sendLiftToFloor
+)
+
+
+function getLiftData(liftData) {
+  if (lifts.value.indexOf(liftData) === -1) {
+    lifts.value.push(liftData)
+  }
+  emit("lifts", lifts)
+}
+
+function chooseLift (liftsArr, targetFloor) {
+
+  let sortLifts = liftsArr.slice()
+  // Filter by isReady
+  if (sortLifts.filter(lift => lift.isReady).length) {
+    let isReadyFiltered = sortLifts.filter(lift => lift.isReady)
+    //Filter by lift is not on pressed floor
+    if (isReadyFiltered.filter(lift => lift.currentFloor !== targetFloor).length) {
+      let filteredByFloor = (isReadyFiltered.filter(lift => lift.currentFloor !== targetFloor))
+      //sort by closest floor
+      filteredByFloor.sort((a, b) => Math.abs(targetFloor - a.currentFloor) - Math.abs(targetFloor - b.currentFloor))
+      return liftToFloor.id = filteredByFloor[0].id
+    }
+  }}
+
+function sendLiftToFloor() {
+  liftToFloor.nextFloor = props.floorPressed.floor
+  chooseLift(lifts.value, props.floorPressed.floor)
 }
 
 </script>
 
 <template>
-  <div class="floor-shaft">
+  <div
+      class="floor-shaft"
+      v-for="lift in liftCount"
+      :key="lift"
+  >
     <div
-        v-for="index in floors"
-        :key="index"
+        v-for="floor in floors"
+        :key="floor"
     >
       <LiftCabin
-        v-if="index === 1"
-        :style="moving"
-        :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready': isReady}"
-        :next-floor="props.nextFloor"
-        :direction="direction"
-        :is-waiting="isWaiting"
-        @transitionend="transitionEnd"
+        v-if="floor === 1"
+        :data="liftToFloor"
+        :lift-id="lift"
+        @lift="getLiftData"
       />
-      {{index}}
+      {{floor}}
     </div>
   </div>
 </template>
 
-<style scoped>
+<style>
 .floor-shaft {
   margin-right: 10px;
   min-width: 100px;
@@ -57,16 +87,5 @@ function transitionEnd() {
   height: 100px;
   position: relative;
 }
-.is-moving {
-  background-color: aqua;
-}
-.is-waiting {
-  background-color: yellow;
-}
-.is-ready {
-  background-color: greenyellow;
-}
-
-
 
 </style>
