@@ -1,19 +1,22 @@
 <script setup>
 import FloorsPanel from "@/components/FloorsPanel";
 import LiftShaft from "@/components/LiftShaft";
-import { ref } from "vue";
+import {reactive, ref} from "vue";
 
-const floors = ref(5)
-const floorPressed = ref(1)
+const floors = ref(8)
+const liftCount = ref(4)
+const floorPressed = reactive({floor: 1, count: 0})
 const queue = ref([])
+const lifts = ref([{}])
 
 
 function sendLiftToFloor(floor) {
-  floorPressed.value = floor
+  floorPressed.floor = floor
+  floorPressed.count++
 }
 
-function sendQueueToPanel(que) {
-  queue.value = que
+function getLiftsDataArray(liftsData) {
+lifts.value = liftsData
 }
 
 </script>
@@ -23,8 +26,9 @@ function sendQueueToPanel(que) {
   <div class="app">
     <LiftShaft
         :floors="floors"
-        :button="floorPressed"
-        @queue="sendQueueToPanel"
+        :floor-pressed="floorPressed"
+        :lift-count="liftCount"
+        @lifts="getLiftsDataArray"
     />
     <FloorsPanel
         :floors="floors"

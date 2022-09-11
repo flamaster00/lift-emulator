@@ -1,88 +1,38 @@
 <script setup>
 
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, reactive, watch} from "vue";
 
 const props = defineProps({
-  floorNumber: Number,
+  data: Object,
+  liftId: Number,
 })
 
-const emit = defineEmits(['queue'])
+const emit = defineEmits(['lift'])
 
-const currentFloor = ref(1)
-const nextFloor = ref (1)
-const queue = ref([])
-const isMoving = ref(false)
-const isWaiting = ref(false)
-const isReady = ref(true)
-
-function checkPressedButton(floor) {
-  //  NO items in queue
-  if (!queue.value.length) {
-    if (floor !== currentFloor.value) {
-      queue.value.push(floor)
-      emit('queue', queue.value)
-    }
-  } else {
-    // there ARE items in queue
-    if (queue.value.indexOf(floor) === -1) {
-      queue.value.push(floor)
-      emit('queue', queue.value)
-    }
-  }
-}
-
-function liftStart() {
-  if (queue.value.length) {
-    if (isReady.value) {
-      const nextFloor = queue.value[0]
-      liftMoving(nextFloor)
-      }
-  }
-}
-function liftMoving(floor) {
-  isReady.value = false
-  isMoving.value = true
-  nextFloor.value = floor
-
-}
-function liftWaiting() {
-  isMoving.value = false
-  isWaiting.value = true
-  currentFloor.value = nextFloor.value
-
-  setTimeout(() => {
-    liftReady()
-  }, 3000)
-}
-function liftReady() {
-  queue.value.shift()
-  emit('queue', queue.value)
-  isWaiting.value = false
-  isReady.value = true
-}
-const moveToFloor = computed(() => {
-  const position = -((nextFloor.value - 1) * 100)
-  const transition = Math.abs(nextFloor.value - currentFloor.value)
-  return `top: ${position}px; transition: top ${transition}s ease-in-out`
+const lift = reactive({
+  id: props.liftId,
+  currentFloor: 1,
+  nextFloor: 1,
+  queue: [],
+  isMoving: false,
+  isWaiting: false,
+  isReady: true
 })
 
-const direction = computed(() => {
-  return nextFloor.value - currentFloor.value
+onMounted(() => {
+  emit('lift', lift)
 })
 
-// call liftWaiting() after moving transition ended.
-// moved this function here because it won't work in liftStart() function after liftMoving()
-// as it can't see isWaiting change
-function transitionEnd() {
-  liftWaiting()
-}
-
-// checkPressedButton function can't see new value of props.floorNumber without watcher
-watch(
-    () => props.floorNumber,
+watch(lift,
     () => {
-      checkPressedButton(props.floorNumber)
-      if (isReady.value) {
+      emit('lift', lift)
+})
+
+watch(
+    () => props.data.nextFloor,
+    () => {
+      if (lift.id === props.data.id) lift.queue.push(props.data.nextFloor)
+      if (lift.isReady) {
         liftStart()
       }
     }
@@ -90,11 +40,43 @@ watch(
 
 // Without isReady lift won't start after finishing move to floor
 watch(
-    () => [queue.value, isReady.value],
+    () => [lift.queue, lift.isReady],
     liftStart
 )
 
-checkPressedButton(props.floorNumber)
+function liftStart() {
+  if (lift.queue.length) {
+    if (lift.isReady) {
+      lift.nextFloor = lift.queue[0]
+      }
+  }
+}
+function liftMoving() {
+  lift.isReady = false
+  lift.isMoving = true
+}
+function liftWaiting() {
+  lift.isMoving = false
+  lift.isWaiting = true
+  setTimeout(() => {
+    liftReady()
+  }, 3000)
+}
+function liftReady() {
+  lift.queue.shift()
+  lift.currentFloor = lift.nextFloor
+  lift.isWaiting = false
+  lift.isReady = true
+}
+const moveToFloor = computed(() => {
+  const position = -((lift.nextFloor - 1) * 100)
+  const transition = Math.abs(lift.nextFloor - lift.currentFloor)
+  return `top: ${position}px; transition: top ${transition}s ease-in-out`
+})
+
+const direction = computed(() => {
+  return lift.nextFloor - lift.currentFloor
+})
 
 </script>
 
@@ -103,20 +85,21 @@ checkPressedButton(props.floorNumber)
   <div
       class="lift"
       :style="moveToFloor"
-      :class="{'is-moving': isMoving, 'is-waiting': isWaiting, 'is-ready':isReady}"
-      @transitionend="transitionEnd"
+      :class="{'is-moving': lift.isMoving, 'is-waiting': lift.isWaiting, 'is-ready':lift.isReady}"
+      @transitionstart="liftMoving"
+      @transitionend="liftWaiting"
   >
-    <div class="screen">{{nextFloor}}</div>
+    <div class="screen">{{lift.nextFloor}}</div>
     <div>
       <div
           class="arrow-up"
-          :class="{up: direction > 0, 'is-waiting-up': isWaiting}"
+          :class="{up: direction > 0, 'is-waiting-up': lift.isWaiting}"
 
       >
       </div>
       <div
           class="arrow-down"
-          :class="{down: direction < 0, 'is-waiting-down': isWaiting}"
+          :class="{down: direction < 0, 'is-waiting-down': lift.isWaiting}"
       >
       </div>
     </div>
