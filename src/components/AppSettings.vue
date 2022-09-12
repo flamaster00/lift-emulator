@@ -138,10 +138,16 @@ div {
   border-radius: 10px;
   vertical-align: center;
   font-size: 1.2rem;
-  border: 1px solid grey;
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 2px 3px 0 rgba(0,0,0,0.19);
+  background-color: transparent;
+  border: 2px solid #C0C0C0;
+  color: #fff;
 }
-button:active {
+.parameter-btn:hover:enabled {
+  border: 2px solid #16D9E3;
+  color: #16D9E3;
+}
+.parameter-btn:active {
   background-color: #2c3880;
   transform: scale(80%);
   color: white;
@@ -153,10 +159,14 @@ button:active {
   width: 30px;
   text-align: center;
   user-select: none;
+  color: #fff
 }
 
-button:disabled {
+.parameter-btn:disabled {
   background: #ccc;
+  border: 2px solid #cc4949;
+  cursor: default;
+  color: #cc4949;
 }
 
 </style>

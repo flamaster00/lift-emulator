@@ -56,10 +56,14 @@ function getQueueData(queueData) {
 
 <style>
 * {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
+  margin: 0;
+}
+body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  background: linear-gradient(200deg, #29323C 0%, #485563 100%);
+  color: #eee;
 }
 .main-header {
   text-align: center;
@@ -67,9 +71,8 @@ function getQueueData(queueData) {
 .app {
   margin: 10px;
   padding: 10px;
-  display: flex;
   height: 100%;
-  border: 1px solid black;
+  display: flex;
   justify-content: flex-start;
 }
 </style>

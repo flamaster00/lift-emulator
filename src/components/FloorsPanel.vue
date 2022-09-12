@@ -37,6 +37,7 @@ watch(
           :key="floor"
       >
         <button
+            class="floor-btn"
             :key="floor"
             :class="{
               active: queue.indexOf(floor) !== -1,
@@ -55,7 +56,7 @@ watch(
 
 <style scoped>
  .floors-panel {
-   border: 1px solid black;
+   border: 1px solid grey;
    padding: 5px;
    margin: 0 10px;
    min-width: 100px;
@@ -81,19 +82,26 @@ watch(
    display: inline-flex;
 
  }
- .floor-button-container > button {
+
+ .floor-btn {
    width: 30px;
    height: 30px;
    border-radius: 50%;
-   border: 1px solid grey;
+   border: 1px solid #343434;
    cursor: pointer;
    user-select: none;
    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 2px 3px 0 rgba(0,0,0,0.19);
+   background-color: #656565;
+   color: #fff;
  }
  .active {
    border: 2px solid #770a0a;
    background-color: #e14848;
    color: #fff;
+ }
+ button:hover {
+   border: 2px solid #16D9E3;
+   color: #16D9E3;
  }
 
  button:active {
@@ -103,6 +111,7 @@ watch(
  }
  .next {
    background-color: #209cff;
+   border: 2px solid #16D9E3;
  }
 
 </style>

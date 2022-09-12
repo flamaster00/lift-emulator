@@ -77,19 +77,20 @@ function sendLiftToFloor() {
 <style>
 .floor-shaft {
   margin-right: 10px;
-  min-width: 100px;
   height: 80%;
-  border: 1px solid grey;
+  border: 1px solid black;
   display: flex;
   flex-direction: column-reverse;
-
+  background-color: #2c3880;
+  z-index: -10;
 }
 .floor-shaft > div {
   padding: 0;
-  border: 1px solid blue;
-  width: 100px;
+  border: 1px solid grey;
+  width: 102px;
   height: 100px;
   position: relative;
+  color: #fff;
 }
 
 </style>
