@@ -2,9 +2,11 @@
 import FloorsPanel from "@/components/FloorsPanel";
 import LiftShaft from "@/components/LiftShaft";
 import {reactive, ref} from "vue";
+import AppSettings from "@/components/AppSettings";
 
-const floors = ref(8)
-const liftCount = ref(4)
+
+const floorCount = ref(5)
+const liftCount = ref(1)
 const floorPressed = reactive({floor: 1, count: 0})
 const queue = ref([])
 const lifts = ref([{}])
@@ -13,6 +15,14 @@ const lifts = ref([{}])
 function sendLiftToFloor(floor) {
   floorPressed.floor = floor
   floorPressed.count++
+}
+
+function getFloorCount(value) {
+  floorCount.value = value
+}
+
+function getLiftCount(value) {
+  liftCount.value = value
 }
 
 function getLiftsDataArray(liftsData) {
@@ -25,15 +35,19 @@ lifts.value = liftsData
   <h1 class="main-header">Эмулятор лифта</h1>
   <div class="app">
     <LiftShaft
-        :floors="floors"
+        :floors="floorCount"
         :floor-pressed="floorPressed"
         :lift-count="liftCount"
         @lifts="getLiftsDataArray"
     />
     <FloorsPanel
-        :floors="floors"
+        :floors="floorCount"
         :queue="queue"
         @response="sendLiftToFloor"
+    />
+    <AppSettings
+        @floor="getFloorCount"
+        @lift="getLiftCount"
     />
   </div>
 

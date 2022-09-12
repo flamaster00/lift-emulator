@@ -38,11 +38,11 @@ function setNextFloor(id) {
 
 </template>
 
-<style>
+<style scoped>
  .floors-panel {
    border: 1px solid black;
    padding: 5px;
-   margin: 10px;
+   margin: 0 10px;
    min-width: 100px;
    text-align: center;
    align-self: start;
