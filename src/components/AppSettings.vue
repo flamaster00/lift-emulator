@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {minLiftCount, maxLiftCount, minFloorCount, maxFloorCount} from '../config'
 
 const floorCount = ref(5)
@@ -8,6 +8,8 @@ const liftCount = ref(1)
 
 const emit = defineEmits(['floor', 'lift'])
 
+
+//watcher insted of clickHandler functions for increment/decrement each value
 watch(
     () => [floorCount.value, liftCount.value],
     () => {
@@ -31,6 +33,35 @@ watch(
         emit('lift', liftCount.value)
       }
 )
+
+watch(
+    () => [floorCount.value, liftCount.value],
+    saveToCookie
+)
+
+onMounted(() => {
+  const floorCookie = getCookie('floorCount')
+  const liftCookie = getCookie('liftCount')
+  if (floorCookie !== undefined && !Number.isNaN(floorCookie)) {
+    floorCount.value = floorCookie
+  }
+  if (liftCookie !== undefined && !Number.isNaN(liftCookie)) {
+    liftCount.value = liftCookie
+  }
+})
+
+function saveToCookie() {
+  document.cookie = "floorCount=" + String(floorCount.value)
+  document.cookie = "liftCount=" + String(liftCount.value)
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) {
+    return  Number(parts.pop().split(';').shift())
+  }
+}
 
 </script>
 

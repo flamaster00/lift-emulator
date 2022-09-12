@@ -30,7 +30,7 @@ watch(
 <template>
   <div class="floors-panel">
     <h2>Вызов лифта на этаж</h2>
-    <div class="floor-buttons">
+    <div class="floor-buttons" >
       <div
           class="floor-button-container"
           v-for="floor in props.floors"
@@ -61,17 +61,18 @@ watch(
    min-width: 100px;
    text-align: center;
    align-self: start;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 }
  .floor-buttons {
-   max-height: 200px;
    border: 1px solid grey;
    margin: 10px;
    padding: 10px;
    display: flex;
-   flex-direction: column-reverse;
    flex-wrap: wrap;
-   align-self: start;
-
+   flex-direction: column-reverse;
+   align-items: center;
  }
  .floor-button-container {
    padding: 2px;

@@ -70,5 +70,6 @@ function getQueueData(queueData) {
   display: flex;
   height: 100%;
   border: 1px solid black;
+  justify-content: flex-start;
 }
 </style>
