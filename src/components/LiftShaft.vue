@@ -9,10 +9,10 @@ const props = defineProps({
   floorPressed: Object
 })
 
-const lifts = ref([])
+const queueData = ref([])
 const liftToFloor = reactive({})
 
-const emit = defineEmits(['lifts'])
+const emit = defineEmits(['queue-data'])
 
 watch(
     () => props.floorPressed.count,
@@ -21,10 +21,14 @@ watch(
 
 
 function getLiftData(liftData) {
-  if (lifts.value.indexOf(liftData) === -1) {
-    lifts.value.push(liftData)
+  if (queueData.value.indexOf(liftData) === -1) {
+    queueData.value.push(liftData)
   }
-  emit("lifts", lifts)
+  let newQueue = []
+  queueData.value.map(lift => {
+    newQueue = [...newQueue, ...lift.queue]
+  })
+  emit("queue-data", newQueue)
 }
 
 function chooseLift (liftsArr, targetFloor) {
@@ -44,7 +48,7 @@ function chooseLift (liftsArr, targetFloor) {
 
 function sendLiftToFloor() {
   liftToFloor.nextFloor = props.floorPressed.floor
-  chooseLift(lifts.value, props.floorPressed.floor)
+  chooseLift(queueData.value, props.floorPressed.floor)
 }
 
 </script>

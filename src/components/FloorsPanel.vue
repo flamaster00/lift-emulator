@@ -1,15 +1,29 @@
 <script setup>
 
+
+import {ref, watch} from "vue";
+
 const props = defineProps({
   floors: Number,
+  liftCount: Number,
   queue: Array
 })
+
+const queue = ref([])
 
 const emit = defineEmits(['response'])
 
 function setNextFloor(id) {
   emit('response', id)
 }
+
+function checkQueue() {
+  queue.value = props.queue
+}
+
+watch(
+    () => props.queue,
+    checkQueue)
 
 </script>
 
@@ -25,8 +39,9 @@ function setNextFloor(id) {
         <button
             :key="floor"
             :class="{
-              active: queue.includes(floor),
-              next: floor === props.queue[0]
+              active: queue.indexOf(floor) !== -1,
+              //next floor button is active if there is only 1 lift
+              next: props.liftCount === 1 && queue.indexOf(floor) === 0
             }"
             @click="setNextFloor(floor)"
         >
@@ -71,6 +86,7 @@ function setNextFloor(id) {
    border-radius: 50%;
    border: 1px solid grey;
    cursor: pointer;
+   user-select: none;
    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 2px 3px 0 rgba(0,0,0,0.19);
  }
  .active {

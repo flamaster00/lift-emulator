@@ -9,10 +9,10 @@ const floorCount = ref(5)
 const liftCount = ref(1)
 const floorPressed = reactive({floor: 1, count: 0})
 const queue = ref([])
-const lifts = ref([{}])
 
 
 function sendLiftToFloor(floor) {
+  //to be able to recognize multiple clicks on the same button from FloorsPanel
   floorPressed.floor = floor
   floorPressed.count++
 }
@@ -25,8 +25,8 @@ function getLiftCount(value) {
   liftCount.value = value
 }
 
-function getLiftsDataArray(liftsData) {
-lifts.value = liftsData
+function getQueueData(queueData) {
+  queue.value = queueData
 }
 
 </script>
@@ -38,10 +38,11 @@ lifts.value = liftsData
         :floors="floorCount"
         :floor-pressed="floorPressed"
         :lift-count="liftCount"
-        @lifts="getLiftsDataArray"
+        @queue-data="getQueueData"
     />
     <FloorsPanel
         :floors="floorCount"
+        :lift-count="liftCount"
         :queue="queue"
         @response="sendLiftToFloor"
     />
