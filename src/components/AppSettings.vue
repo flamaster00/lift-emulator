@@ -11,7 +11,6 @@ const emit = defineEmits(['floor', 'lift'])
 watch(
     () => [floorCount.value, liftCount.value],
     () => {
-      console.log(maxLiftCount)
       if (floorCount.value > maxFloorCount) {
         floorCount.value = maxFloorCount
         emit('floor', floorCount.value)
