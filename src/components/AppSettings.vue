@@ -38,19 +38,35 @@ watch(
 <div class="container">
   <h2>Параметры приложения</h2>
   <div class="parameter-container">
-    <h3>Количество этажей</h3>
-    <div style="margin-top: 3px">
-      <button class="parameter-btn" @click="floorCount--">-</button>
+    <h3 style="user-select: none">Количество этажей</h3>
+    <div class="count-container">
+      <button
+          class="parameter-btn"
+          @click="floorCount--"
+          :disabled="floorCount === minFloorCount"
+      >-</button>
       <div class="parameter-count">{{floorCount}}</div>
-      <button class="parameter-btn" @click="floorCount++">+</button>
+      <button
+          class="parameter-btn"
+          @click="floorCount++"
+          :disabled="floorCount === maxFloorCount"
+      >+</button>
     </div>
   </div>
   <div class="parameter-container">
-    <h3>Количество лифтов</h3>
-    <div style="margin-top: 3px">
-      <button class="parameter-btn" @click="liftCount--">-</button>
+    <h3 style="user-select: none">Количество лифтов</h3>
+    <div class="count-container">
+      <button
+          class="parameter-btn"
+          @click="liftCount--"
+          :disabled="liftCount === minLiftCount"
+      >-</button>
       <div class="parameter-count">{{liftCount}}</div>
-      <button class="parameter-btn" @click="liftCount++">+</button>
+      <button
+          class="parameter-btn"
+          @click="liftCount++"
+          :disabled="liftCount === maxLiftCount"
+      >+</button>
     </div>
   </div>
 </div>
@@ -76,9 +92,16 @@ div {
   flex-direction: column;
   align-items: center;
 }
+.count-container {
+  margin-top: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .parameter-btn {
   cursor: pointer;
+  user-select: none;
   height: 25px;
   width: 40px;
   border-radius: 10px;
@@ -98,6 +121,11 @@ button:active {
   line-height: 30px;
   width: 30px;
   text-align: center;
+  user-select: none;
+}
+
+button:disabled {
+  background: #ccc;
 }
 
 </style>
