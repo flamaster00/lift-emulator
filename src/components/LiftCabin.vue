@@ -56,6 +56,7 @@ function liftMoving() {
   lift.isMoving = true
 }
 function liftWaiting() {
+  lift.currentFloor = lift.nextFloor
   lift.isMoving = false
   lift.isWaiting = true
   setTimeout(() => {
@@ -64,7 +65,6 @@ function liftWaiting() {
 }
 function liftReady() {
   lift.queue.shift()
-  lift.currentFloor = lift.nextFloor
   lift.isWaiting = false
   lift.isReady = true
 }
