@@ -9,7 +9,7 @@ const liftCount = ref(1)
 const emit = defineEmits(['floor', 'lift'])
 
 
-//watcher insted of clickHandler functions for increment/decrement each value
+//watcher instead of clickHandler functions for increment/decrement each value
 watch(
     () => [floorCount.value, liftCount.value],
     () => {
@@ -36,12 +36,12 @@ watch(
 
 watch(
     () => [floorCount.value, liftCount.value],
-    saveToCookie
+    saveToLS
 )
 
 onMounted(() => {
-  const floorCookie = getCookie('floorCount')
-  const liftCookie = getCookie('liftCount')
+  const floorCookie = getFromLS('floorCount')
+  const liftCookie = getFromLS('liftCount')
   if (floorCookie !== undefined && !Number.isNaN(floorCookie)) {
     floorCount.value = floorCookie
   }
@@ -50,17 +50,14 @@ onMounted(() => {
   }
 })
 
-function saveToCookie() {
-  document.cookie = "floorCount=" + String(floorCount.value)
-  document.cookie = "liftCount=" + String(liftCount.value)
+function saveToLS() {
+  localStorage.setItem("floorCount", String(floorCount.value))
+  localStorage.setItem("liftCount", String(liftCount.value))
 }
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    return  Number(parts.pop().split(';').shift())
-  }
+function getFromLS(name) {
+  const value = localStorage.getItem(name)
+  return Number(value)
 }
 
 </script>
