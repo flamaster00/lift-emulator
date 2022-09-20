@@ -6,7 +6,7 @@ import {reactive, ref, watch} from "vue";
 const props = defineProps({
   floors: Number,
   liftCount: Number,
-  floorPressed: Object
+  floorPressed: Number
 })
 
 const queueData = ref([])
@@ -15,7 +15,7 @@ const liftToFloor = reactive({})
 const emit = defineEmits(['queue-data'])
 
 watch(
-    () => props.floorPressed.count,
+    () => props.floorPressed,
     sendLiftToFloor
 )
 
@@ -25,7 +25,7 @@ function getLiftData(liftData) {
     queueData.value.push(liftData)
   }
   let newQueue = []
-  queueData.value.map(lift => {
+  queueData.value.forEach(lift => {
     newQueue = [...newQueue, ...lift.queue]
   })
   emit("queue-data", newQueue)
@@ -33,22 +33,24 @@ function getLiftData(liftData) {
 
 function chooseLift (liftsArr, targetFloor) {
 
-  let sortLifts = liftsArr.slice()
-  // Filter by isReady
-  if (sortLifts.filter(lift => lift.isReady).length) {
-    let isReadyFiltered = sortLifts.filter(lift => lift.isReady)
-    //Filter by lift is not on pressed floor
-    if (isReadyFiltered.filter(lift => lift.currentFloor !== targetFloor).length) {
-      let filteredByFloor = (isReadyFiltered.filter(lift => lift.currentFloor !== targetFloor))
-      //sort by closest floor
-      filteredByFloor.sort((a, b) => Math.abs(targetFloor - a.currentFloor) - Math.abs(targetFloor - b.currentFloor))
-      return liftToFloor.id = filteredByFloor[0].id
+
+  let sortLifts = JSON.parse(JSON.stringify(liftsArr.slice()))
+  for (let lift of sortLifts) {
+    if ((lift.queue.includes(targetFloor)) || (targetFloor === lift.currentFloor) || (targetFloor === lift.nextFloor)) {
+      return liftToFloor.id = null
     }
-  }}
+  }
+
+    sortLifts.sort((a, b) => {
+      return ((a.queue.length - b.queue.length) || (Math.abs(a.nextFloor - targetFloor) - Math.abs(b.nextFloor - targetFloor)) )
+    })
+    return liftToFloor.id = sortLifts[0].id
+
+}
 
 function sendLiftToFloor() {
-  liftToFloor.nextFloor = props.floorPressed.floor
-  chooseLift(queueData.value, props.floorPressed.floor)
+  liftToFloor.nextFloor = props.floorPressed
+  chooseLift(queueData.value, props.floorPressed)
 }
 
 </script>
