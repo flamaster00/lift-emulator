@@ -7,8 +7,6 @@ const props = defineProps({
   liftId: Number,
 })
 
-const emit = defineEmits(['lift'])
-
 const lift = reactive({
   id: props.liftId,
   currentFloor: 1,
@@ -18,6 +16,8 @@ const lift = reactive({
   isWaiting: false,
   isReady: true
 })
+
+const emit = defineEmits(['lift'])
 
 onMounted(() => {
   emit('lift', lift)

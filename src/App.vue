@@ -5,10 +5,10 @@ import {ref} from "vue";
 import AppSettings from "@/components/AppSettings";
 
 
-const floorCount = ref(5)
-const liftCount = ref(1)
+const floorCount = ref(null)
+const liftCount = ref(null)
 const queue = ref([])
-const nextFloor = ref(1)
+const nextFloor = ref(null)
 
 
 function sendLiftToFloor(floor) {

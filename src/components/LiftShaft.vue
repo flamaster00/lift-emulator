@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 const queueData = ref([])
-const liftToFloor = reactive({})
+const liftToFloor = reactive({id: null, nextFloor: null})
 
 const emit = defineEmits(['queue-data'])
 
