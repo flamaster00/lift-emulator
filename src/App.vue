@@ -7,19 +7,11 @@ import AppSettings from "@/components/AppSettings";
 
 const floorCount = ref(5)
 const liftCount = ref(1)
-// const floorPressed = reactive({floor: 1, count: 0})
 const queue = ref([])
 const nextFloor = ref(1)
 
 
-
-// function sendLiftToFloor(floor) {
-//   //to be able to recognize multiple clicks on the same button from FloorsPanel
-//   floorPressed.floor = floor
-//   floorPressed.count++
-// }
 function sendLiftToFloor(floor) {
-  //to be able to recognize multiple clicks on the same button from FloorsPanel
   nextFloor.value = floor
 }
 
