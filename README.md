@@ -1,6 +1,6 @@
 # Эмулятор лифта
 
-## Project setup
+## Установка
 ```
 cd lift-emulator
 npm install
