@@ -40,11 +40,12 @@ watch(
             class="floor-btn"
             :key="floor"
             :class="{
-              active: queue.indexOf(floor) !== -1,
+              'active': queue.indexOf(floor) !== -1,
               //next floor button is active if there is only 1 lift
-              next: props.liftCount === 1 && queue.indexOf(floor) === 0
+              'next': props.liftCount === 1 && queue.indexOf(floor) === 0
             }"
-            @click="setNextFloor(floor)"
+          @click="setNextFloor(floor)"
+           
         >
           {{floor}}
         </button>
@@ -99,12 +100,12 @@ watch(
    background-color: #e14848;
    color: #fff;
  }
- button:hover {
+ .floor-btn:hover {
    border: 2px solid #16D9E3;
    color: #16D9E3;
  }
 
- button:active {
+ .floor-btn:active {
    background-color: #ce6e6e;
    transform: scale(80%) translateY(2px);
    color: white;

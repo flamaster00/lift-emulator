@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, ref, watch} from "vue";
 import {minLiftCount, maxLiftCount, minFloorCount, maxFloorCount} from '../config'
 
 const floorCount = ref(5)
@@ -39,15 +39,20 @@ watch(
     saveToLS
 )
 
-onMounted(() => {
-  const floorCookie = getFromLS('floorCount')
-  const liftCookie = getFromLS('liftCount')
-  if (floorCookie !== undefined && !Number.isNaN(floorCookie)) {
-    floorCount.value = floorCookie
+onBeforeMount(() => {
+  if (localStorage) {
+    const floorCookie = getFromLS('floorCount')
+    const liftCookie = getFromLS('liftCount')
+    if (floorCookie !== undefined && !Number.isNaN(floorCookie)) {
+      floorCount.value = floorCookie
+    }
+    if (liftCookie !== undefined && !Number.isNaN(liftCookie)) {
+      liftCount.value = liftCookie
+    }
   }
-  if (liftCookie !== undefined && !Number.isNaN(liftCookie)) {
-    liftCount.value = liftCookie
-  }
+  
+  emit('floor', floorCount.value)
+  emit('lift', liftCount.value)
 })
 
 function saveToLS() {

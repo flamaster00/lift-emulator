@@ -54,9 +54,9 @@ function liftStart() {
 function liftMoving() {
   lift.isReady = false
   lift.isMoving = true
-  lift.currentFloor = lift.nextFloor
 }
 function liftWaiting() {
+  lift.currentFloor = lift.nextFloor
   lift.isMoving = false
   lift.isWaiting = true
   setTimeout(() => {
@@ -93,13 +93,13 @@ const direction = computed(() => {
     <div>
       <div
           class="arrow-up"
-          :class="{up: direction > 0, 'is-waiting-up': lift.isWaiting}"
+          :class="{'up': direction > 0, 'is-waiting-up': lift.isWaiting}"
 
       >
       </div>
       <div
           class="arrow-down"
-          :class="{down: direction < 0, 'is-waiting-down': lift.isWaiting}"
+          :class="{'down': direction < 0, 'is-waiting-down': lift.isWaiting}"
       >
       </div>
     </div>
